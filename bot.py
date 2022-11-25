@@ -1,29 +1,30 @@
-import pyrogram
-
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-import os
-
-from config import Config
+import logging.config
 from pyrogram import Client 
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
+from config import API_ID, API_HASH, BOT_TOKEN, FORCE_SUB, PORT
+from aiohttp import web
+from plugins.web_support import web_server
+
+logging.config.fileConfig('logging.conf')
+logging.getLogger().setLevel(logging.INFO)
+logging.getLogger("pyrogram").setLevel(logging.ERROR)
+
+
 
 class autocaption(Client):
-    
+
     def __init__(self):
         super().__init__(
-            session_name="Captioner",
-            bot_token = Config.BOT_TOKEN,
-            api_id = Config.API_ID,
-            api_hash = Config.API_HASH,
-            workers = 20,
-            plugins = dict(
-                root="Plugins"
-            )
-     async def start(self):
+            name="renamer",
+            api_id=API_ID,
+            api_hash=API_HASH,
+            bot_token=BOT_TOKEN,
+            workers=50,
+            plugins={"root": "plugins"},
+            sleep_threshold=5,
+        )
+
+    async def start(self):
        await super().start()
        me = await self.get_me()
        self.mention = me.mention
@@ -47,6 +48,7 @@ class autocaption(Client):
     async def stop(self, *args):
       await super().stop()      
       logging.info("Bot Stopped")
+        
 
 if __name__ == "__main__" :
     autocaption().run()
