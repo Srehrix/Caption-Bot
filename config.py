@@ -4,7 +4,7 @@ import os
 
 class Config(object):
       BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
-      API_ID = int(os.environ.get("APP_ID", 12345))
+      API_ID = int(os.environ.get("APP_ID", ""))
       API_HASH = os.environ.get("API_HASH")
       FORCE_SUB = os.environ.get("FORCE_SUB", "") 
       FLOOD = int(os.environ.get("FLOOD", "10"))
